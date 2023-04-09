@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      <% if (title) { %>
+        <%- title %>
+      <% } else { %>
+        Đã đăng xuất
+      <% } %>
+      </title>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <%- include ('../partials/header') %>
+    
+    <h1>Đã đăng xuất. Vui lòng quay về <a class="nav-link" href="/views/">trang chủ</a></h1>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%- title %></title>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <%- include ('../partials/header') %>
+    <div class="container">
+      <form class="form-signin" action="/api/users/register" method="POST">
+        <h2 class="form-signin-heading">Please signup</h2>
+        <label for="inputName" class="sr-only">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          class="form-control"
+          placeholder="User Name"
+          required=""
+        />
+        <label for="inputEmail" class="sr-only">First Name</label>
+        <input
+          type="text"
+          id="firstname"
+          name="firstname"
+          class="form-control"
+          placeholder="First Name"
+          required=""
+        />
+        <label for="inputEmail" class="sr-only">Last Name</label>
+        <input
+          type="text"
+          id="lastname"
+          name="lastname"
+          class="form-control"
+          placeholder="Last Name"
+          required=""
+        />
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-control"
+          placeholder="Password"
+          required=""
+        />
+
+        <div id="SignupFail"></div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit" >
+          Sign in
+        </button>
+        <br />
+
+        <p>
+          You've got an accout? Click <a href="/views/login">here</a> to login.
+        </p>
+      </form>
+    </div>
+    <%- include('../partials/footer') %>
+  </body>
+</html>
