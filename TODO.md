@@ -2,3 +2,7 @@
 + Đăng nhập fail, lỗi, trùng
 + Models
 + Xuất log (nghiên cứu lại bài giảng a Vương)
+
+
+
+Local Storage không cho phép gửi lại thông tin khi refresh lại trang

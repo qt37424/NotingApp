@@ -57,12 +57,14 @@ exports.loginApp = async (req, res, callback) => {
       res.status(400).json("Wrong password")
     } else {
       // console.log(res.status(200).json(user));
+      console.log(res.status(400));
       return res.render("pages/about", 
         {
           title: "Login successfully", 
           loginMessage: req.flash('loginMessage'), 
-          user: user,
-          function () { window.localStorage.setItem("user", user) }
+          user: user, function () { 
+            localStorage.setItem("user", req.user)
+          }
         });
 
     }
