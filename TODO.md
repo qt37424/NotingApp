@@ -6,3 +6,5 @@
 
 
 Local Storage không cho phép gửi lại thông tin khi refresh lại trang
+
+Session cho phép gửi thông tin trong gói tin

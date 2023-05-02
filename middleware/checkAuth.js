@@ -24,8 +24,6 @@ exports.requiresLogin = function (req, res, next) {
   }
 }
 
-
-// Session cho phép gửi thông tin trong gói tin
-exports.UserIdLogin = function(req, res) {
-  userId: req.user.UserId;
+exports.UserLogin = function(req, res) {
+  return req.user;
 }
