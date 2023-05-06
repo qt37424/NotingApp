@@ -27,9 +27,9 @@ exports.createUser = async (req, res) => {
       if (userDoc) {
         req.flash(
           "error",
-          "E-Mail exists already, please pick a different one."
+          "Username exists already, please pick a different one."
         );
-        return res.redirect("../../views/signup");
+        return res.redirect("../../views");
       }
     })
     const user = await newUser.save();
@@ -56,7 +56,7 @@ exports.loginApp = async (req, res, callback) => {
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) {
       res.status(400).json("Wrong password")
-      return res.render("pages")
+      return res.render("pages/login")
     } else {
       // console.log(res.status(200).json(user));
       console.log(res.status(400));

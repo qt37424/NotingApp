@@ -1,33 +1,40 @@
 const User = require("../models/User");
-const Post = require("../models/Note")
+const Note = require("../models/Note")
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt"); 
 const session = require("express-session");
 
 /**
- * Create new POST
+ * Create new Note
  */
-exports.newPost = async function (req, res) {
-  const newPost = new Post(req.body);
+exports.newNote = async (req, res) => {
+  // Init new note
+  const newNote = new Note({
+    userId: req.session.user._id,
+    content: req.body.content,
+    title: req.body.title, 
+    topic: req.body.topic,
+  });
+  console.log(newNote);
   try {
-    const savedPost = await newPost.save();
-    res.status(200).json(savedPost);
+    const savedNote = await newNote.save();
+    return res.redirect("../../views/index");
   } catch (err) {
     res.status(500).json(err)
   }
 } 
 
 /**
- * Update Post Content
+ * Update Note Content
  */
-exports.modifiedPost = async function (req, res) {
+exports.modifiedNote = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
-    if (Post.userId === req.params.userId) { // chỗ này nếu middleware ổn thì xóa bớt đi
-      await post.updateOne( { $set: req.body } );
-      res.status(200).json("The post have been updated")
+    const Note = await Note.findById(req.params.id);
+    if (Note.userId === req.params.userId) { // chỗ này nếu middleware ổn thì xóa bớt đi
+      await Note.updateOne( { $set: req.body } );
+      res.status(200).json("The Note have been updated")
     } else {
-      res.status(403).json("You can't configure this post")
+      res.status(403).json("You can't configure this Note")
     }
   } catch (err) {
     res.status(500).json(err)
@@ -35,16 +42,16 @@ exports.modifiedPost = async function (req, res) {
 }
 
 /**
- * delete post
+ * delete Note
  */
-exports.deletePost = async function (req, res) {
+exports.deleteNote = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
-    if (Post.userId === req.params.userId) { // chỗ này nếu middleware ổn thì xóa bớt đi
-      await post.deleteOne();
-      res.status(200).json("The post have been deleted")
+    const Note = await Note.findById(req.params.id);
+    if (Note.userId === req.params.userId) { // chỗ này nếu middleware ổn thì xóa bớt đi
+      await Note.deleteOne();
+      res.status(200).json("The Note have been deleted")
     } else {
-      res.status(403).json("You can't delete this post")
+      res.status(403).json("You can't delete this Note")
     }
   } catch (err) {
     res.status(500).json(err)
@@ -53,11 +60,11 @@ exports.deletePost = async function (req, res) {
 
 /**
  * 
- * gget a Post
+ * gget a Note
  */
-exports.getPost = async function (req, res) {
+exports.getNote = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const Note = await Note.findById(req.params.id);
   } catch (err) {
     res.status(500).json(err)
   }
@@ -66,26 +73,26 @@ exports.getPost = async function (req, res) {
 /**
  * Timeline box in a duration
  */
-exports.getUserTimelinePost = async function (req, res) {
+exports.getUserTimelineNote = async function (req, res) {
   try {
     const currentUser = await User.findById(req.params.userId);
-    const userPosts = await Post.find({ userId: currentUser._id });
-    const friendPosts = await Promise.all(
+    const userNotes = await Note.find({ userId: currentUser._id });
+    const friendNotes = await Promise.all(
       currentUser.followings.map(friendId => { 
-        return Post.find({ userId: friendId });
+        return Note.find({ userId: friendId });
       })
     ) 
-    res.status(200).json(userPosts.concat(...friendPosts))
+    res.status(200).json(userNotes.concat(...friendNotes))
   } catch (err) {
     res.status(500).json(err);
   }
 }
 
-exports.getAllPost = async function (req, res) {
+exports.getAllNote = async function (req, res) {
   try {
     const user = await User.findOne({ username: req.params.username });
-    const posts = await Post.find({ userId: user._id });
-    res.status(200).json(posts);
+    const Notes = await Note.find({ userId: user._id });
+    res.status(200).json(Notes);
     // đến đây
   } catch (err) {
     res.status(500).json(err);

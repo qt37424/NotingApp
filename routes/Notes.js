@@ -1,15 +1,15 @@
 const router = require("express").Router();
-const Post = require("../controllers/noteController")
-const { isLoggedIn } = require('../middleware/checkAuth');
+const Note = require("../controllers/noteController")
+const { requiresLogin } = require('../middleware/checkAuth');
 
 router.get("/", async (req, res) => {
   res.send("hello this is Users routes!")
 })
 
-router.post("/newNote", isLoggedIn, Post.newPost);
-router.put("/update/:id", isLoggedIn, Post.deletePost);
-router.delete("/delete/:id", isLoggedIn, Post.modifiedPost);
-router.get("getAllPost", isLoggedIn, Post.getAllPost);
-router.get("get/:id", isLoggedIn, Post.getUserTimelinePost);
+router.post("/newNote", requiresLogin, Note.newNote);
+router.put("/update/:id", requiresLogin, Note.deleteNote);
+router.delete("/delete/:id", requiresLogin, Note.modifiedNote);
+router.get("getAllNote", requiresLogin, Note.getAllNote);
+router.get("get/:id", requiresLogin, Note.getUserTimelineNote);
 
 module.exports = router

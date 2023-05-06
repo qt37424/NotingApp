@@ -8,12 +8,12 @@ const mongoose = require("mongoose");
 router.get('/', function(req, res) {
   res.render('pages/index', {
     title: "about page",
+    user: req.session.user
   });
 });
 
 // about page 
 router.get('/about', requiresLogin, function(req, res, callback) {
-  console.log("Quangtran: " + req.session.user);
   res.render('pages/about', {
     title: 'About Page', 
     user: req.session.user
@@ -41,6 +41,13 @@ router.get('/logout', function(req, res) {
   req.session.destroy();
   res.render('pages/logout', {
     title: "Log out"
+  }); 
+});
+
+router.get('/update-account', requiresLogin, function(req, res) {
+  res.render('pages/updateAccount', {
+    title: "Update Information",
+    user: req.session.user
   }); 
 });
 

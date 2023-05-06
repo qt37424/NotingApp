@@ -46,7 +46,7 @@ async function main() {
 
 app.use(express.json());
 app.use("/api/users", userRoute);
-app.use("/api/posts", noteRoute);
+app.use("/api/notes", noteRoute);
 app.use("/views", viewRoute);
 
 app.listen(port, () => {
