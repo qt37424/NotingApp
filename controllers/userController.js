@@ -2,6 +2,7 @@ const User = require("../models/User");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt"); 
 const session = require("express-session");
+const { SetUserLogin } = require("../middleware/checkAuth")
 
 /*
  * CREATE NEW user
@@ -55,16 +56,18 @@ exports.loginApp = async (req, res, callback) => {
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) {
       res.status(400).json("Wrong password")
+      return res.render("pages")
     } else {
       // console.log(res.status(200).json(user));
       console.log(res.status(400));
+      req.session.user = user
+      req.session.save();
       return res.render("pages/about", 
         {
           title: "Login successfully", 
           loginMessage: req.flash('loginMessage'), 
-          user: user, function () { 
-            localStorage.setItem("user", req.user)
-          }
+          isLoggedIn: true,
+          user: user
         });
 
     }
@@ -152,4 +155,3 @@ exports.getAllUser = async (req, res) => {
     res.send(userMap);  
   });
 }
-

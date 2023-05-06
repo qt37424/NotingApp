@@ -4,21 +4,37 @@ const port = 3000
 const mongoose = require("mongoose");
 const flash = require('connect-flash');
 const userRoute = require("./routes/Users");
-const postRoute = require("./routes/Posts");
+const noteRoute = require("./routes/Notes");
 const viewRoute = require("./routes/Views");
 const session = require('express-session')
+const cookieParser = require("cookie-parser");
+const MongoDBStore = require('connect-mongodb-session')(session);
 app.use(express.urlencoded({extended: true})); // need that to read input 
 app.set('view engine', 'ejs');
+const store = new MongoDBStore({
+  uri: 'mongodb://127.0.0.1:27017/NotingApp',
+  collection: 'mySessions'
+})
 
 app.use(
   session({
+    secret:"ABCDEF",
     resave: false,
     saveUninitialized: false,
-    secret:"mySecretKey",
-    cookie: { secure: true, maxAge: 14400000 },
+    store: store
   })
 );
 app.use(flash())
+
+// parsing the incoming data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+//serving public file
+app.use(express.static(__dirname));
+
+// cookie parser middleware
+app.use(cookieParser());
 
 /* Start connect database */
 main().catch(err => console.log(err));
@@ -30,7 +46,7 @@ async function main() {
 
 app.use(express.json());
 app.use("/api/users", userRoute);
-app.use("/api/posts", postRoute);
+app.use("/api/posts", noteRoute);
 app.use("/views", viewRoute);
 
 app.listen(port, () => {

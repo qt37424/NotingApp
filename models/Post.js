@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const shortid = require('shortid');
 
-const PostSchema = new mongoose.Schema({
+const NoteSchema = new mongoose.Schema({
   _id: {
     type: String,
     default: shortid.generate
@@ -10,18 +10,18 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  content: {
-    type: String,
-  },
   title: {
     type: String,
   },
-  topic: {
+  content: {
     type: String,
+  },
+  img: { 
+    type: String
   }
 },
 {
   timestamps: true,
 }); 
 
-module.exports = mongoose.model("Note", PostSchema);
+module.exports = mongoose.model("Note", NoteSchema);
