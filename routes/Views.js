@@ -1,6 +1,8 @@
 const router = require("express").Router();
 var flash = require('connect-flash');
 const { requiresLogin } = require('../middleware/checkAuth');
+const Note = require("../models/Note")
+const mongoose = require("mongoose");
 
 // index page 
 router.get('/', function(req, res) {
@@ -10,10 +12,12 @@ router.get('/', function(req, res) {
 });
 
 // about page 
-router.get('/about', requiresLogin, function(req, res) {
+router.get('/about', requiresLogin, async function(req, res) {
+  const noteList = await Note.find({ userId: req.session.user._id })
   res.render('pages/about', {
     title: 'About Page', 
-    user: req.session.user
+    user: req.session.user,
+    NoteList: noteList
   });
 });
 
@@ -53,6 +57,14 @@ router.get('/newNote', function(req, res) {
     title: "New Post",
     user: req.session.user
   }); 
+});
+
+router.get('detailNote/:id', async function(req, res){
+  const note = await Note.findById(req.params.id); 
+  res.render('pages/Notes/detail', {
+    title: "New Post",
+    user: req.session.user
+  });
 });
 
 module.exports = router

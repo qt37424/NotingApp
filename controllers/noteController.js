@@ -18,7 +18,10 @@ exports.newNote = async (req, res) => {
   console.log(newNote);
   try {
     const savedNote = await newNote.save();
-    return res.redirect("../../views/index");
+    return res.render("pages/Notes/detail", {
+      user: req.session.user,
+      note: savedNote
+    });
   } catch (err) {
     res.status(500).json(err)
   }
