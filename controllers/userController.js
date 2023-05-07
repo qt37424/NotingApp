@@ -55,21 +55,22 @@ exports.loginApp = async (req, res, callback) => {
     
     const validPassword = await bcrypt.compare(req.body.password, user.password);
     if (!validPassword) {
-      res.status(400).json("Wrong password")
-      return res.render("pages/login")
+      return res.render("pages/login",{
+        title: "Wrong Password",
+        message: req.flash('loginMessage')
+      })
     } else {
       // console.log(res.status(200).json(user));
       console.log(res.status(400));
       req.session.user = user
       req.session.save();
-      return res.render("pages/about", 
-        {
-          title: "Login successfully", 
-          loginMessage: req.flash('loginMessage'), 
-          isLoggedIn: true,
-          user: user
-        });
-
+      return res.render("pages/index", 
+      {
+        title: "Login successfully", 
+        loginMessage: req.flash('loginMessage'), 
+        isLoggedIn: true,
+        user: user
+      });
     }
   } catch (err) {
     res.status(500).json(err)
@@ -81,21 +82,43 @@ exports.loginApp = async (req, res, callback) => {
  * Update a User
  */
 exports.updateUser = async (req, res) => {
-  if (req.body.userId === req.params.id || req.body.isAdmin) {
+  if (req.session.user._id === req.params.id || req.session.user.isAdmin) {
     // check password
-    if (req.body.password) { 
-      try { 
-        const salt = await bcrypt.genSalt(10);
-        req.body.password = await bcrypt.hash(req.body.password, salt);
-      } catch(err) {
-        return res.status(500).json(err);
-      }
-    }
     try { 
-      const user = await User.findByIdAndUpdate(req.params.id, {
-        $set:req.body,
-      });
-      res.status(200).json("Account has been updated!")
+      const salt = await bcrypt.genSalt(10);
+      const match = await bcrypt.compare(req.body.oldPassword, req.session.user.password);
+      if (match){
+        try { 
+          const hashedPassword = await bcrypt.hash(req.body.newPassword, salt);
+          const user = await User.findByIdAndUpdate(req.params.id, {
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            password: hashedPassword,
+            updatedAt: Date.now()
+          });
+          req.session.destroy();
+          res.redirect("../../../views/login");
+          //Maybe we can call this render after using req.session.destroy() cause in this render having req.flash
+          // req.flash(
+          //   "error",
+          //   "Re-initialize"
+          // );
+          // return res.render("pages/login",{
+          //   title: "Update information Successfully",
+          //   message: req.flash('loginMessage'),
+          //   isUpdated: true,
+          // })
+        } 
+        catch(err) {
+          return res.status(500).json(err);
+        }
+      } else {
+        return res.render('pages/updateAccount', {
+          title: "Re-Update Information",
+          user: req.session.user,
+          isWrongPassword: true,
+        }); 
+      }
     } catch(err) {
       return res.status(500).json(err);
     }
@@ -109,10 +132,12 @@ exports.updateUser = async (req, res) => {
  * Delete a User
  */
 exports.deleteUser = async (req, res) => {
-  if (req.body.userId === req.params.id || req.body.isAdmin) {
+  if (req.session.user._id === req.params.id || req.body.isAdmin) {
     try { 
       await User.findByIdAndDelete(req.params.id);
-      res.status(200).json("Account has been deleted!")
+      // res.status(200).json("Account has been deleted!")
+      req.session.destroy()
+      return
     } catch(err) {
       return res.status(500).json(err);
     }

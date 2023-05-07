@@ -3,13 +3,16 @@
   <head>
     <title><%- title %></title>
     <%- include('../partials/head'); %>
+    <%- include('../partials/header'); %>
   </head>
 
   <body>
-    <%- include ('../partials/header') %>
     <div class="container">
-      <form class="form-signin" action='"/api/users/update/:" + <%= user._id %>' method="POST">
+      <form class="form-signin" action="../../../api/users/update/<%=user._id%>?_method=PUT" method="POST">
         <h2 class="form-signin-heading">Update User Account</h2>
+        <% if (typeof isWrongPassword == 'object' && isWrongPassword) { %>
+          <p>Nhập sai pass rồi</p>
+        <% } %>
         <label for="inputEmail" class="sr-only">First Name</label>
         <input
           type="text"
@@ -17,6 +20,7 @@
           name="firstname"
           class="form-control"
           placeholder="First Name"
+          value = '<%= user.firstname %>'
           required=""
         />
         <label for="inputEmail" class="sr-only">Last Name</label>
@@ -26,13 +30,14 @@
           name="lastname"
           class="form-control"
           placeholder="Last Name"
+          value = '<%= user.lastname %>'
           required=""
         />
         <label for="inputPassword" class="sr-only">Old Password</label>
         <input
           type="password"
-          id="old-password"
-          name="old-password"
+          id="oldPassword"
+          name="oldPassword"
           class="form-control"
           placeholder="Password"
           required=""
@@ -40,8 +45,8 @@
         <label for="inputPassword" class="sr-only">New Password</label>
         <input
           type="password"
-          id="new-password"
-          name="new-password"
+          id="newPassword"
+          name="newPassword"
           class="form-control"
           placeholder="Password"
           required=""

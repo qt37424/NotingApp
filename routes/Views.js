@@ -1,19 +1,16 @@
 const router = require("express").Router();
 var flash = require('connect-flash');
 const { requiresLogin } = require('../middleware/checkAuth');
-const User = require("../controllers/userController")
-const mongoose = require("mongoose");
 
 // index page 
 router.get('/', function(req, res) {
   res.render('pages/index', {
     title: "about page",
-    user: req.session.user
   });
 });
 
 // about page 
-router.get('/about', requiresLogin, function(req, res, callback) {
+router.get('/about', requiresLogin, function(req, res) {
   res.render('pages/about', {
     title: 'About Page', 
     user: req.session.user

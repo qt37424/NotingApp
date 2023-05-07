@@ -60,31 +60,13 @@ exports.deleteNote = async (req, res) => {
 
 /**
  * 
- * gget a Note
+ * get a Note
  */
 exports.getNote = async (req, res) => {
   try {
-    const Note = await Note.findById(req.params.id);
+    return Note = await Note.findById(req.session.user._id);
   } catch (err) {
-    res.status(500).json(err)
-  }
-}
-
-/**
- * Timeline box in a duration
- */
-exports.getUserTimelineNote = async function (req, res) {
-  try {
-    const currentUser = await User.findById(req.params.userId);
-    const userNotes = await Note.find({ userId: currentUser._id });
-    const friendNotes = await Promise.all(
-      currentUser.followings.map(friendId => { 
-        return Note.find({ userId: friendId });
-      })
-    ) 
-    res.status(200).json(userNotes.concat(...friendNotes))
-  } catch (err) {
-    res.status(500).json(err);
+    return res.status(500).json(err)
   }
 }
 

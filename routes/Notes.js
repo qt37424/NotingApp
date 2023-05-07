@@ -9,7 +9,6 @@ router.get("/", async (req, res) => {
 router.post("/newNote", requiresLogin, Note.newNote);
 router.put("/update/:id", requiresLogin, Note.deleteNote);
 router.delete("/delete/:id", requiresLogin, Note.modifiedNote);
-router.get("getAllNote", requiresLogin, Note.getAllNote);
-router.get("get/:id", requiresLogin, Note.getUserTimelineNote);
+router.get("/getAllNote", requiresLogin, Note.getAllNote);
 
 module.exports = router
