@@ -10,7 +10,25 @@
 </header>
 
 <main>
-<div class="row">
+  <div class="container-fluid container-fluid-custom pb-5 mb-5">
+
+    <div class="row">
+      <% if(NoteList != '') { %>
+        <% NoteList.forEach(function (note, index) { %>
+          
+          <a href="/views/detailNote/<%=note._id%>">
+            <h4><%= note.title %></h4>
+          </a>
+  
+        <% }) %>
+      <% } else { %>
+        <p>You have no Note now. Let <a class="nav-link" href="/views/newNote">create new one</a></p>
+      <% } %>
+  
+    </div>
+  
+  </div>
+<!-- <div class="row">
   <div class="col-sm-8">
     <div class="jumbotron">
       <h1>This is great</h1>
@@ -23,7 +41,7 @@
       <h3>Look I'm A Sidebar!</h3>
     </div>
   </div>
-</div>
+</div> -->
 </main>
 
 <footer>

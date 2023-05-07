@@ -35,7 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //serving public file
-app.use(express.static(__dirname));
+app.use(express.static('public'));
 
 // cookie parser middleware
 app.use(cookieParser());
