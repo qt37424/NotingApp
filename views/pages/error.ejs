@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      <% if (title) { %>
+        <%- title %>
+      <% } else { %>
+        Error
+      <% } %>
+      </title>
+    <%- include('../partials/head'); %>
+  </head>
+
+  <body>
+    <%- include ('../partials/header') %>
+    
+    <h1>There's something wrong here. Let's <a class="nav-link" href="/views/">click here</a> to return home page</h1>
+
+    <%- include('../partials/footer') %>
+  </body>
+</html>

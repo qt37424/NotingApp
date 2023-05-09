@@ -32,12 +32,19 @@ exports.newNote = async (req, res) => {
  */
 exports.modifiedNote = async (req, res) => {
   try {
-    const Note = await Note.findById(req.params.id);
-    if (Note.userId === req.params.userId) { // chỗ này nếu middleware ổn thì xóa bớt đi
-      await Note.updateOne( { $set: req.body } );
-      res.status(200).json("The Note have been updated")
+    const note = await Note.findById(req.params.id);
+    if (note.userId === req.session.user._id) { // Check user delete note is user created note 
+      await note.updateOne( { $set: req.body } );
+      const noteUpdate = await Note.findById(req.params.id);
+      return res.render("pages/Notes/detail", {
+        user: req.session.user,
+        note: noteUpdate
+      });
     } else {
-      res.status(403).json("You can't configure this Note")
+      res.render('pages/error', {
+        title: 'Error Page', 
+        user: req.session.user
+      });
     }
   } catch (err) {
     res.status(500).json(err)
@@ -49,12 +56,20 @@ exports.modifiedNote = async (req, res) => {
  */
 exports.deleteNote = async (req, res) => {
   try {
-    const Note = await Note.findById(req.params.id);
-    if (Note.userId === req.params.userId) { // chỗ này nếu middleware ổn thì xóa bớt đi
-      await Note.deleteOne();
-      res.status(200).json("The Note have been deleted")
+    const note = await Note.findById(req.params.id);
+    if (note.userId === req.session.user._id) { // Check user delete note is user created note 
+      await note.deleteOne();
+      const noteList = await Note.find({ userId: req.session.user._id })
+      res.render('pages/about', {
+        title: 'About Page', 
+        user: req.session.user,
+        NoteList: noteList
+      });
     } else {
-      res.status(403).json("You can't delete this Note")
+      res.render('pages/error', {
+        title: 'Error Page', 
+        user: req.session.user
+      });
     }
   } catch (err) {
     res.status(500).json(err)

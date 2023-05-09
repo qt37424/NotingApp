@@ -19,7 +19,10 @@ Các chức năng cụ thể của app
 + Update thông tin user (firstname, lastname, password)
 + Xóa user
 
-* Note
+* Note (Chỉ có thể làm khi đã đăng nhập, sẽ không truy cập vào các tính năng dưới nếu chưa đăng nhâp)
 + Tạo một note mới
++ Delete note
++ Updaet Note
+=> Ở đây vẫn sẽ truy cập vào được nếu đã đăng xuất thông qua việc đăng xuất và back lại các page trước => vẫn chưa biết cách xử lí thế nào khi load như vậy
 
 Bài tập vẫn còn nhiều thiếu sót mong thầy và mọi người có thể cho mình xin thêm ý kiến để em/mình có thể rút kinh nghiệm và hoàn thiện bản thân hơn trong tương lai
