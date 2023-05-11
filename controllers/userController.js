@@ -33,8 +33,12 @@ exports.createUser = async (req, res) => {
       }
     })
     const user = await newUser.save();
+    // res.status(200).json("User is created successfully") //For Postman
     // console.log(res.status(200).json(user));
-    res.redirect("../../views/login");
+    return res.render("pages/login",{
+      title: "Fisrt Login",
+      message: req.flash('loginMessage')
+    })
   } 
   
   catch (err) {
@@ -61,7 +65,8 @@ exports.loginApp = async (req, res, callback) => {
       })
     } else {
       // console.log(res.status(200).json(user));
-      console.log(res.status(400));
+      // console.log(res.status(400));
+      // res.status(200).json("You are Logined into app") // For Postman
       req.session.user = user
       req.session.save();
       return res.render("pages/index", 
@@ -96,6 +101,7 @@ exports.updateUser = async (req, res) => {
             password: hashedPassword,
             updatedAt: Date.now()
           });
+          // res.status(200).json(user)
           req.session.destroy();
           res.redirect("../../../views/login");
           //Maybe we can call this render after using req.session.destroy() cause in this render having req.flash
@@ -113,6 +119,7 @@ exports.updateUser = async (req, res) => {
           return res.status(500).json(err);
         }
       } else {
+        // res.status(200).json("Password is incorrect")
         return res.render('pages/updateAccount', {
           title: "Re-Update Information",
           user: req.session.user,
@@ -137,7 +144,10 @@ exports.deleteUser = async (req, res) => {
       await User.findByIdAndDelete(req.params.id);
       // res.status(200).json("Account has been deleted!")
       req.session.destroy()
-      return
+      return res.render("pages/index", 
+      {
+        title: "Home page", 
+      });
     } catch(err) {
       return res.status(500).json(err);
     }
@@ -152,14 +162,14 @@ exports.deleteUser = async (req, res) => {
  * localhost:3000/user?username=quang or lh:3000/userId=123435 
  */
 exports.getUser = async (req, res) => {
-  const userId = req.query.userId; 
-  const username = req.query.username;
+  const userId = req.params.id; 
   try {
-    const user = userId 
-      ? await User.findById(userId)
-      : await User.findOne({username: username});
-    const {firstname, lastname,...other} = user._doc;
-    res.status(200).json(other);
+    // const user = userId 
+    //   ? await User.findById(userId)
+    //   : await User.findOne({username: username});
+    const user = await User.findById(userId)
+    // const {firstname, lastname,...other} = user._doc;
+    // res.status(200).json(user);
   } catch(err) {
     return res.status(500).json(err)
   }

@@ -10,12 +10,18 @@ const session = require('express-session')
 const cookieParser = require("cookie-parser");
 const MongoDBStore = require('connect-mongodb-session')(session);
 const methodOverride = require('method-override');
+const moment = require("moment");
 app.use(express.urlencoded({extended: true})); // need that to read input 
 app.set('view engine', 'ejs');
 const store = new MongoDBStore({
   uri: 'mongodb://127.0.0.1:27017/NotingApp',
   collection: 'mySessions'
 })
+
+app.use((req, res, next)=>{
+  res.locals.moment = moment;
+  next();
+});
 
 app.use(
   session({

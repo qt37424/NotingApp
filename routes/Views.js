@@ -61,6 +61,7 @@ router.get('/newNote', function(req, res) {
 
 router.get('/detailNote/:id', requiresLogin, async function(req, res){
   const note = await Note.findById(req.params.id); 
+  // res.status(200).json(note)
   res.render('pages/Notes/detail', {
     title: "New Post",
     user: req.session.user,
@@ -70,6 +71,7 @@ router.get('/detailNote/:id', requiresLogin, async function(req, res){
 
 router.get('/delete/:id', requiresLogin, async function(req, res){
   await Note.deleteOne(req.params.id).where({ user: req.session.user._id }); 
+  // res.status(200).json("This note is deleted")
   const noteList = await Note.find({ userId: req.session.user._id })
   res.render('pages/about', {
     title: "New Post",
